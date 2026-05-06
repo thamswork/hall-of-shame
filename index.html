@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หนอนหัวกระสุน | Hall of Shame</title>
+    <!-- Importing Sora and a Monospace font for that clean, terminal aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --text-main: #e0e0e0;
+            --accent-green: #00ff41;
+            --accent-red: #ff3333;
+            --border: #333333;
+            --font-mono: 'Space Mono', 'Cascadia Mono', monospace;
+            --font-sans: 'Sora', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-family: var(--font-sans);
+            margin-top: 2rem;
+        }
+
+        .header h1 {
+            color: var(--accent-green);
+            font-size: 3rem;
+            text-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+            letter-spacing: 2px;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .board-container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem;
+            border-bottom: 1px dashed var(--border);
+            font-size: 1.2rem;
+            transition: background 0.2s ease;
+        }
+
+        .row:hover {
+            background: #1a1a1a;
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .rank { 
+            width: 40px; 
+            color: #666; 
+            font-size: 1rem;
+        }
+
+        .name { 
+            flex-grow: 1; 
+            font-weight: 700; 
+            letter-spacing: 1.5px; 
+            text-transform: uppercase;
+        }
+
+        .score { 
+            color: var(--text-main); 
+            font-weight: 700; 
+            font-size: 1.4rem;
+            background: #222;
+            padding: 0.2rem 0.8rem;
+            border-radius: 4px;
+        }
+        
+        /* Special styling for the #1 offender */
+        .row.rank-1 .name { 
+            color: var(--accent-red); 
+            text-shadow: 0 0 8px rgba(255, 51, 51, 0.4); 
+        }
+        .row.rank-1 .rank { 
+            color: var(--accent-red); 
+            font-weight: bold;
+        }
+        .row.rank-1 .score {
+            color: var(--bg);
+            background: var(--accent-red);
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+        }
+
+        .loading { 
+            text-align: center; 
+            color: var(--accent-green); 
+            font-style: italic; 
+            animation: blink 1.2s infinite; 
+            padding: 2rem;
+        }
+
+        @keyframes blink { 
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; } 
+        }
+        
+        .footer { 
+            margin-top: auto; 
+            padding-top: 3rem;
+            font-size: 0.8rem; 
+            color: #444; 
+            font-family: var(--font-sans);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🪱 หนอนหัวกระสุน</h1>
+        <p>Live Office Hall of Shame</p>
+    </div>
+
+    <div class="board-container" id="leaderboard">
+        <div class="loading">ESTABLISHING SECURE CONNECTION TO THE WORM...</div>
+    </div>
+
+    <div class="footer">
+        SYSTEM AUTO-REFRESHES EVERY 30 SECONDS
+    </div>
+
+    <script>
+        // Your exact Google Apps Script Web App URL
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwEgjaUojKyKjg1LOUvpypPgNwhivOPFn9G1kjHQX9C9kUo7F7R-b1Hnx7aBsix_kgB/exec';
+        
+        async function fetchLeaderboard() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                renderBoard(data.leaderboard);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('leaderboard').innerHTML = '<div class="loading" style="color: red;">ERROR: CONNECTION LOST</div>';
+            }
+        }
+
+        function renderBoard(data) {
+            const container = document.getElementById('leaderboard');
+            container.innerHTML = ''; // Clear loading text
+            
+            if (data.length === 0) {
+                container.innerHTML = '<div class="loading" style="animation: none;">NO DATA YET. THE OFFICE IS TOO PEACEFUL.</div>';
+                return;
+            }
+
+            data.forEach((player, index) => {
+                const rank = index + 1;
+                const row = document.createElement('div');
+                row.className = `row rank-${rank}`;
+                
+                row.innerHTML = `
+                    <div class="rank">#${rank}</div>
+                    <div class="name">${player.name}</div>
+                    <div class="score">${player.score}</div>
+                `;
+                
+                container.appendChild(row);
+            });
+        }
+
+        // Initial fetch on load
+        fetchLeaderboard();
+
+        // Auto-refresh every 30 seconds (30000 milliseconds)
+        setInterval(fetchLeaderboard, 30000);
+    </script>
+</body>
+</html>
