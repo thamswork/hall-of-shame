@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>หนอนหัวกระสุน | Hall of Shame</title>
-    <!-- Importing Sora and a Monospace font for that clean, terminal aesthetic -->
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Importing Noto Sans Thai -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0a0a0a;
@@ -14,14 +14,13 @@
             --accent-green: #00ff41;
             --accent-red: #ff3333;
             --border: #333333;
-            --font-mono: 'Space Mono', 'Cascadia Mono', monospace;
-            --font-sans: 'Sora', sans-serif;
+            --font-thai: 'Noto Sans Thai', sans-serif;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text-main);
-            font-family: var(--font-mono);
+            font-family: var(--font-thai);
             margin: 0;
             padding: 2rem;
             display: flex;
@@ -33,24 +32,23 @@
         .header {
             text-align: center;
             margin-bottom: 3rem;
-            font-family: var(--font-sans);
             margin-top: 2rem;
         }
 
         .header h1 {
             color: var(--accent-green);
-            font-size: 3rem;
+            font-size: 4rem; /* Made slightly larger for Thai legibility */
             text-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
-            letter-spacing: 2px;
             margin: 0 0 10px 0;
-            text-transform: uppercase;
+            font-weight: 800;
         }
 
         .header p {
             color: #888;
             font-size: 1rem;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            font-weight: 700;
         }
 
         .board-container {
@@ -69,7 +67,7 @@
             align-items: center;
             padding: 1.2rem;
             border-bottom: 1px dashed var(--border);
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             transition: background 0.2s ease;
         }
 
@@ -84,23 +82,23 @@
         .rank { 
             width: 40px; 
             color: #666; 
-            font-size: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
         }
 
         .name { 
             flex-grow: 1; 
             font-weight: 700; 
-            letter-spacing: 1.5px; 
             text-transform: uppercase;
         }
 
         .score { 
             color: var(--text-main); 
-            font-weight: 700; 
-            font-size: 1.4rem;
+            font-weight: 800; 
+            font-size: 1.6rem;
             background: #222;
-            padding: 0.2rem 0.8rem;
-            border-radius: 4px;
+            padding: 0.2rem 1rem;
+            border-radius: 6px;
         }
         
         /* Special styling for the #1 offender */
@@ -110,7 +108,6 @@
         }
         .row.rank-1 .rank { 
             color: var(--accent-red); 
-            font-weight: bold;
         }
         .row.rank-1 .score {
             color: var(--bg);
@@ -124,6 +121,8 @@
             font-style: italic; 
             animation: blink 1.2s infinite; 
             padding: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
 
         @keyframes blink { 
@@ -136,7 +135,8 @@
             padding-top: 3rem;
             font-size: 0.8rem; 
             color: #444; 
-            font-family: var(--font-sans);
+            font-weight: 700;
+            letter-spacing: 1px;
         }
     </style>
 </head>
@@ -163,10 +163,17 @@
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
+                
+                if (data.error) {
+                    console.error("Backend Error:", data.error);
+                    document.getElementById('leaderboard').innerHTML = `<div class="loading" style="color: red; animation: none;">API ERROR: ${data.error}</div>`;
+                    return;
+                }
+                
                 renderBoard(data.leaderboard);
             } catch (error) {
                 console.error('Error fetching data:', error);
-                document.getElementById('leaderboard').innerHTML = '<div class="loading" style="color: red;">ERROR: CONNECTION LOST</div>';
+                document.getElementById('leaderboard').innerHTML = '<div class="loading" style="color: red; animation: none;">ERROR: CONNECTION LOST</div>';
             }
         }
 
@@ -174,8 +181,8 @@
             const container = document.getElementById('leaderboard');
             container.innerHTML = ''; // Clear loading text
             
-            if (data.length === 0) {
-                container.innerHTML = '<div class="loading" style="animation: none;">NO DATA YET. THE OFFICE IS TOO PEACEFUL.</div>';
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="loading" style="animation: none;">ยังไม่มีใครโดนประจานเลย (ออฟฟิศนี้คนดีเกินไป)</div>';
                 return;
             }
 
@@ -197,7 +204,7 @@
         // Initial fetch on load
         fetchLeaderboard();
 
-        // Auto-refresh every 30 seconds (30000 milliseconds)
+        // Auto-refresh every 30 seconds
         setInterval(fetchLeaderboard, 30000);
     </script>
 </body>
