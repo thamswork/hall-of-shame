@@ -101,19 +101,20 @@
             margin-bottom: 20px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             letter-spacing: -0.3px;
         }
 
-        select, input { 
+        input { 
             width: 100%; 
             height: 56px; 
             border-radius: 16px; 
-            font-size: 15px; 
-            font-weight: 500; 
+            font-size: 20px; 
+            letter-spacing: 4px;
+            font-weight: 700; 
             font-family: inherit;
             text-align: center; 
-            text-align-last: center; 
             margin-bottom: 16px; 
             background: rgba(255, 255, 255, 0.9); 
             border: 1px solid #FFFFFF;
@@ -123,7 +124,7 @@
             appearance: none;
         }
         
-        select:focus, input:focus {
+        input:focus {
             background: #FFFFFF;
             border-color: #1D1D1F;
             box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04);
@@ -266,10 +267,6 @@
     <div id="login-view">
         <div class="glass-card">
             <div class="card-title">ระบุตัวตน</div>
-            <select id="login-name">
-                <option value="">เลือกชื่อของคุณ...</option>
-                <option>กำลังโหลดรายชื่อ...</option>
-            </select>
             <input type="password" id="login-pass" placeholder="รหัสผ่าน 2 หลัก" inputmode="numeric" pattern="[0-9]*" maxlength="2">
             <button class="btn-primary" onclick="attemptLogin()">เข้าสู่ระบบ</button>
             <div id="login-error" class="error-msg"></div>
@@ -284,12 +281,12 @@
         </div>
 
         <div class="glass-card">
-            <div class="card-title" id="action-title">🚨 แจ้งจับคนปากแจ๋ว</div>
+            <div class="card-title" id="action-title" style="justify-content: flex-start;">🚨 แจ้งจับคนปากแจ๋ว</div>
             <div class="user-grid" id="user-buttons"></div>
         </div>
 
         <div class="glass-card" style="animation-delay: 0.1s;">
-            <div class="card-title" id="board-title">🏆 Hall of Shame</div>
+            <div class="card-title" id="board-title" style="justify-content: flex-start;">🏆 Hall of Shame</div>
             <div id="leaderboard"></div>
         </div>
     </div>
@@ -301,42 +298,37 @@
         let currentUser = null;
         let currentMode = 'shame';
 
-        // 1. Initial Load: Get users for dropdown
+        // 1. Initial Load: Pre-fetch data
         async function fetchInitialData() {
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
                 allUsers = data.users || [];
                 currentLeaderboard = data.leaderboard || [];
-                
-                const select = document.getElementById('login-name');
-                select.innerHTML = '<option value="">เลือกชื่อของคุณ...</option>';
-                allUsers.forEach(u => select.innerHTML += `<option value="${u}">${u}</option>`);
             } catch (e) {
                 document.getElementById('login-error').innerText = "เชื่อมต่อฐานข้อมูลล้มเหลว";
             }
         }
 
-        // 2. Handle Login
+        // 2. Handle Login (Code Only)
         async function attemptLogin() {
-            const name = document.getElementById('login-name').value;
             const pass = document.getElementById('login-pass').value;
             const errorDiv = document.getElementById('login-error');
             
-            if(!name || !pass) { errorDiv.innerText = "กรุณากรอกข้อมูลให้ครบ"; return; }
+            if(!pass) { errorDiv.innerText = "กรุณากรอกรหัสผ่าน"; return; }
             errorDiv.innerText = "กำลังตรวจสอบ...";
 
             try {
                 const response = await fetch(API_URL, {
-                    method: 'POST', body: JSON.stringify({ action: 'login', name: name, password: pass })
+                    method: 'POST', body: JSON.stringify({ action: 'login', password: pass })
                 });
                 const result = await response.json();
                 
                 if(result.status === 'success') {
-                    currentUser = name;
+                    currentUser = result.name; // Backend tells us who this code belongs to
                     document.getElementById('login-view').style.display = 'none';
                     document.getElementById('dashboard-view').style.display = 'flex';
-                    document.getElementById('user-greeting').innerText = `Logged in as: ${name}`;
+                    document.getElementById('user-greeting').innerText = `Logged in as: ${currentUser}`;
                     renderDashboard(); 
                 } else {
                     errorDiv.innerText = result.message || "รหัสผ่านไม่ถูกต้อง";
