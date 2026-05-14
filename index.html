@@ -2,290 +2,449 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>หนอนหัวกระสุน | Report System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --bg: #EAECEF;
-            --surface: #FFFFFF;
-            --text-main: #333333;
-            --text-muted: #888888;
-            --primary: #73CBB4; /* KhunThong Mint */
-            --danger: #D9534F;
-            --border: #F0F0F0;
-            --font-thai: 'Noto Sans Thai', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: var(--font-thai);
-            margin: 0;
-            padding: 1.5rem;
-            display: flex;
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; margin: 0; padding: 0; }
+        
+        body { 
+            background-color: #E6EAEF;
+            background-image: 
+                radial-gradient(circle at top left, rgba(255,255,255,0.9) 0%, transparent 60%),
+                radial-gradient(circle at bottom right, rgba(200,210,225,0.6) 0%, transparent 60%),
+                radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 20px 20px;
+            color: #1D1D1F; 
+            font-family: 'Inter', 'Noto Sans Thai', -apple-system, sans-serif; 
+            display: flex; 
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 40px 20px;
+            overflow-x: hidden;
         }
 
-        .header {
+        .ambient-orb {
+            position: fixed;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(255, 59, 48, 0.12) 0%, rgba(255, 59, 48, 0) 70%);
+            filter: blur(30px);
+            z-index: -1;
+            animation: breathe 8s ease-in-out infinite alternate;
+            transition: background 0.5s ease;
+        }
+        
+        body.fame-mode .ambient-orb {
+            background: radial-gradient(circle, rgba(0, 195, 0, 0.12) 0%, rgba(0, 195, 0, 0) 70%);
+        }
+
+        @keyframes breathe {
+            0% { transform: translateX(-60%) translateY(0) scale(1); }
+            100% { transform: translateX(-40%) translateY(30px) scale(1.1); }
+        }
+
+        .header-area {
             text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .header h1 {
-            color: var(--text-main);
-            font-size: 2.5rem; 
-            margin: 0 0 5px 0;
-            font-weight: 800;
-        }
-
-        .header p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        /* --- THE REPORT CARD --- */
-        .card {
+            margin-bottom: 32px;
             width: 100%;
-            max-width: 500px;
-            background: var(--surface);
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-            margin-bottom: 1.5rem;
+            max-width: 420px;
+            animation: iosFadeIn 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        .header-area h1 {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: #1D1D1F;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .header-area p {
+            font-size: 12px;
+            font-weight: 600;
+            color: #86868B;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.35); 
+            backdrop-filter: blur(40px) saturate(160%);
+            -webkit-backdrop-filter: blur(40px) saturate(160%);
+            padding: 24px; 
+            border-radius: 32px; 
+            width: 100%; 
+            max-width: 420px; 
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-top: 1.5px solid rgba(255, 255, 255, 1);
+            border-left: 1.5px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.08), inset 0 4px 24px rgba(255, 255, 255, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.9); 
+            animation: iosFadeIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
         .card-title {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--text-main);
-            margin-bottom: 1rem;
+            font-size: 17px;
+            font-weight: 700;
+            color: #1D1D1F;
+            margin-bottom: 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 8px;
+            letter-spacing: -0.3px;
         }
 
-        .user-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .report-btn {
-            background-color: var(--bg);
-            border: 1px solid #ddd;
-            color: var(--text-main);
-            padding: 12px;
-            border-radius: 12px;
-            font-family: var(--font-thai);
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .report-btn:hover {
-            background-color: var(--danger);
-            color: white;
-            border-color: var(--danger);
-        }
-
-        .report-btn:active {
-            transform: scale(0.96);
-        }
-
-        /* --- LEADERBOARD CARD --- */
-        .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 1.1rem;
-        }
-
-        .row:last-child { border-bottom: none; }
-
-        .rank { 
-            width: 30px; 
-            color: var(--text-muted); 
-            font-weight: 800;
-        }
-
-        .name { 
-            flex-grow: 1; 
-            font-weight: 600; 
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding-right: 15px;
-        }
-
-        .score { 
-            font-weight: 800; 
-            color: var(--danger);
-            background: #FDF2F2;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 1.1rem;
-        }
-
-        .loading { 
+        select, input { 
+            width: 100%; 
+            height: 56px; 
+            border-radius: 16px; 
+            font-size: 15px; 
+            font-weight: 500; 
+            font-family: inherit;
             text-align: center; 
-            color: var(--text-muted); 
-            padding: 1rem;
-            font-size: 0.9rem;
+            text-align-last: center; 
+            margin-bottom: 16px; 
+            background: rgba(255, 255, 255, 0.9); 
+            border: 1px solid #FFFFFF;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), inset 0 2px 4px rgba(0, 0, 0, 0.02);
+            color: #1D1D1F;
+            outline: none;
+            appearance: none;
+        }
+        
+        select:focus, input:focus {
+            background: #FFFFFF;
+            border-color: #1D1D1F;
+            box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04);
         }
 
-        #notification {
-            display: none;
-            background: var(--primary);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            margin-bottom: 15px;
+        .btn-primary { 
+            width: 100%;
+            height: 56px;
+            background: #1D1D1F; 
+            color: #FFFFFF; 
+            border: none;
+            border-radius: 16px; 
+            font-size: 16px; 
+            font-weight: 600; 
+            font-family: inherit;
+            display: flex; justify-content: center; align-items: center; 
+            cursor: pointer; 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.15s ease;
+        }
+        .btn-primary:active { transform: scale(0.97); }
+
+        .error-msg {
+            color: #FF3B30;
+            font-size: 13px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(115, 203, 180, 0.4);
-            animation: popIn 0.3s ease-out forwards;
+            margin-top: 10px;
+            font-weight: 600;
+            min-height: 18px;
         }
 
-        @keyframes popIn {
-            0% { transform: translateY(-10px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
+        .mode-toggle {
+            display: flex;
+            background: rgba(255,255,255,0.5);
+            border-radius: 20px;
+            padding: 4px;
+            margin-bottom: 24px;
+            width: 100%;
+            max-width: 420px;
         }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: 16px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #86868B;
+        }
+        
+        .mode-btn.active.shame {
+            background: #FFFFFF;
+            color: #FF3B30;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .mode-btn.active.fame {
+            background: #FFFFFF;
+            color: #00C300;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .user-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .btn-report { 
+            background: rgba(255, 255, 255, 0.6); 
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            color: #1D1D1F; 
+            height: 56px; 
+            border-radius: 18px; 
+            font-size: 15px; 
+            font-weight: 600; 
+            font-family: inherit;
+            display: flex; justify-content: center; align-items: center; 
+            cursor: pointer; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .btn-report:hover { background: #FFFFFF; transform: translateY(-2px); }
+        .btn-report:active { transform: scale(0.94); }
+
+        body.shame-mode .btn-report:active { background: #FF3B30; color: white; border-color: #FF3B30; }
+        body.fame-mode .btn-report:active { background: #00C300; color: white; border-color: #00C300; }
+
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 16px 12px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+        .row:last-child { border-bottom: none; }
+        .rank { width: 32px; color: #86868B; font-weight: 700; font-size: 15px; }
+        .name { flex-grow: 1; font-weight: 600; font-size: 16px; color: #1D1D1F; }
+        
+        .score { 
+            font-weight: 700; 
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 15px;
+            min-width: 44px;
+            text-align: center;
+        }
+
+        body.shame-mode .score { color: #FF3B30; background: rgba(255, 59, 48, 0.1); }
+        body.shame-mode .row:first-child .name { color: #FF3B30; }
+        body.shame-mode .row:first-child .score { background: #FF3B30; color: white; }
+        
+        body.fame-mode .score { color: #00C300; background: rgba(0, 195, 0, 0.1); }
+        body.fame-mode .row:first-child .name { color: #00C300; }
+        body.fame-mode .row:first-child .score { background: #00C300; color: white; }
+
+        .loading { grid-column: 1 / -1; text-align: center; color: #86868B; padding: 30px 10px; font-size: 14px; font-weight: 500; animation: pulse 1.5s infinite alternate; }
+
+        @keyframes pulse { from { opacity: 0.5; } to { opacity: 1; } }
+        @keyframes iosFadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+        #dashboard-view { display: none; width: 100%; display: flex; flex-direction: column; align-items: center;}
+        #login-view { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        
+        #notification {
+            position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-30px);
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,1);
+            color: #1D1D1F; padding: 14px 24px; border-radius: 30px; font-weight: 600; font-size: 14px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12); opacity: 0; pointer-events: none; transition: all 0.4s; z-index: 100;
+        }
+        #notification.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     </style>
 </head>
-<body>
+<body class="shame-mode">
 
-    <div class="header">
-        <h1>🪱 หนอนหัวกระสุน</h1>
-        <p>SECURE OFFICE REPORTING SYSTEM</p>
+    <div class="ambient-orb"></div>
+    <div id="notification">✅ บันทึกข้อมูลสำเร็จ!</div>
+
+    <div class="header-area">
+        <h1><span style="font-size: 40px; margin-right: 8px;">🪱</span> หนอนหัวกระสุน</h1>
+        <p id="user-greeting">Authentication Required</p>
     </div>
 
-    <div id="notification">✅ ประจานสำเร็จ! ส่งแจ้งเตือนเข้ากลุ่มแล้ว</div>
-
-    <div class="card">
-        <div class="card-title">
-            🚨 แจ้งจับคนปากแจ๋ว
-        </div>
-        <div class="user-grid" id="user-buttons">
-            <div class="loading">กำลังดึงรายชื่อ...</div>
+    <!-- LOGIN VIEW -->
+    <div id="login-view">
+        <div class="glass-card">
+            <div class="card-title">ระบุตัวตน</div>
+            <select id="login-name">
+                <option value="">เลือกชื่อของคุณ...</option>
+                <option>กำลังโหลดรายชื่อ...</option>
+            </select>
+            <input type="password" id="login-pass" placeholder="รหัสผ่าน 2 หลัก" inputmode="numeric" pattern="[0-9]*" maxlength="2">
+            <button class="btn-primary" onclick="attemptLogin()">เข้าสู่ระบบ</button>
+            <div id="login-error" class="error-msg"></div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-title">
-            🏆 Hall of Shame
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboard-view" style="display:none;">
+        <div class="mode-toggle">
+            <button class="mode-btn active shame" onclick="setMode('shame')">🚨 โหมดแจ้งจับ</button>
+            <button class="mode-btn fame" onclick="setMode('fame')">✨ โหมดคนดี</button>
         </div>
-        <div id="leaderboard">
-            <div class="loading">กำลังโหลดข้อมูล...</div>
+
+        <div class="glass-card">
+            <div class="card-title" id="action-title">🚨 แจ้งจับคนปากแจ๋ว</div>
+            <div class="user-grid" id="user-buttons"></div>
+        </div>
+
+        <div class="glass-card" style="animation-delay: 0.1s;">
+            <div class="card-title" id="board-title">🏆 Hall of Shame</div>
+            <div id="leaderboard"></div>
         </div>
     </div>
 
     <script>
-        // Replace this with your newly deployed Web App URL
         const API_URL = 'https://script.google.com/macros/s/AKfycbwEgjaUojKyKjg1LOUvpypPgNwhivOPFn9G1kjHQX9C9kUo7F7R-b1Hnx7aBsix_kgB/exec';
-        
-        async function fetchData() {
+        let allUsers = [];
+        let currentLeaderboard = [];
+        let currentUser = null;
+        let currentMode = 'shame';
+
+        // 1. Initial Load: Get users for dropdown
+        async function fetchInitialData() {
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
+                allUsers = data.users || [];
+                currentLeaderboard = data.leaderboard || [];
                 
-                if (data.error) {
-                    document.getElementById('leaderboard').innerHTML = `<div class="loading" style="color: red;">ERROR: ${data.error}</div>`;
-                    return;
+                const select = document.getElementById('login-name');
+                select.innerHTML = '<option value="">เลือกชื่อของคุณ...</option>';
+                allUsers.forEach(u => select.innerHTML += `<option value="${u}">${u}</option>`);
+            } catch (e) {
+                document.getElementById('login-error').innerText = "เชื่อมต่อฐานข้อมูลล้มเหลว";
+            }
+        }
+
+        // 2. Handle Login
+        async function attemptLogin() {
+            const name = document.getElementById('login-name').value;
+            const pass = document.getElementById('login-pass').value;
+            const errorDiv = document.getElementById('login-error');
+            
+            if(!name || !pass) { errorDiv.innerText = "กรุณากรอกข้อมูลให้ครบ"; return; }
+            errorDiv.innerText = "กำลังตรวจสอบ...";
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST', body: JSON.stringify({ action: 'login', name: name, password: pass })
+                });
+                const result = await response.json();
+                
+                if(result.status === 'success') {
+                    currentUser = name;
+                    document.getElementById('login-view').style.display = 'none';
+                    document.getElementById('dashboard-view').style.display = 'flex';
+                    document.getElementById('user-greeting').innerText = `Logged in as: ${name}`;
+                    renderDashboard(); 
+                } else {
+                    errorDiv.innerText = result.message || "รหัสผ่านไม่ถูกต้อง";
                 }
-                
-                renderUsers(data.users);
-                renderBoard(data.leaderboard);
-            } catch (error) {
-                console.error("Fetch error", error);
+            } catch (e) {
+                errorDiv.innerText = "เกิดข้อผิดพลาดในการเชื่อมต่อ";
             }
         }
 
-        function renderUsers(users) {
-            const container = document.getElementById('user-buttons');
-            container.innerHTML = ''; 
+        // 3. UI Toggles & Rendering
+        function setMode(mode) {
+            currentMode = mode;
+            document.body.className = `${mode}-mode`;
             
-            if (!users || users.length === 0) {
-                container.innerHTML = '<div class="loading">ไม่พบรายชื่อใน Sheet Users</div>';
-                return;
-            }
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.mode-btn.${mode}`).classList.add('active');
+            
+            document.getElementById('action-title').innerText = mode === 'shame' ? '🚨 แจ้งจับคนปากแจ๋ว' : '✨ ให้คะแนนคนทำดี';
+            document.getElementById('board-title').innerText = mode === 'shame' ? '🏆 Hall of Shame' : '😇 Wall of Fame';
+            
+            renderDashboard();
+        }
 
-            users.forEach(name => {
+        function renderDashboard() {
+            const btnContainer = document.getElementById('user-buttons');
+            btnContainer.innerHTML = '';
+            
+            allUsers.forEach(name => {
+                // THE ANTI-CHEAT: Hide user's own name in Fame mode
+                if (currentMode === 'fame' && name === currentUser) return; 
+
                 const btn = document.createElement('button');
-                btn.className = 'report-btn';
-                btn.innerText = `👉 ${name}`;
-                btn.onclick = () => reportUser(name, btn);
-                container.appendChild(btn);
+                btn.className = 'btn-report';
+                btn.innerText = name;
+                btn.onclick = () => submitAction(name, btn);
+                btnContainer.appendChild(btn);
             });
-        }
 
-        function renderBoard(leaderboard) {
-            const container = document.getElementById('leaderboard');
-            container.innerHTML = ''; 
+            const boardContainer = document.getElementById('leaderboard');
+            boardContainer.innerHTML = '';
             
-            if (!leaderboard || leaderboard.length === 0) {
-                container.innerHTML = '<div class="loading">ยังไม่มีคนโดนประจาน</div>';
+            let sortedData = [...currentLeaderboard].sort((a, b) => b[currentMode] - a[currentMode]);
+            sortedData = sortedData.filter(p => p[currentMode] > 0);
+
+            if(sortedData.length === 0) {
+                boardContainer.innerHTML = `<div class="loading">ยังไม่มีข้อมูลในโหมดนี้</div>`;
                 return;
             }
 
-            leaderboard.forEach((player, index) => {
+            sortedData.forEach((player, index) => {
                 const row = document.createElement('div');
                 row.className = 'row';
                 row.innerHTML = `
-                    <div class="rank">${index + 1}.</div>
+                    <div class="rank">${index + 1}</div>
                     <div class="name">${player.name}</div>
-                    <div class="score">${player.score}</div>
+                    <div class="score">${player.score = player[currentMode]}</div>
                 `;
-                container.appendChild(row);
+                boardContainer.appendChild(row);
             });
         }
 
-        async function reportUser(name, btnElement) {
-            // Visual feedback
+        // 4. Submit Data
+        async function submitAction(targetName, btnElement) {
             const originalText = btnElement.innerText;
             btnElement.innerText = 'กำลังส่ง...';
             btnElement.style.pointerEvents = 'none';
-            btnElement.style.opacity = '0.7';
+            btnElement.style.opacity = '0.5';
 
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: 'snitch', sinner: name })
+                    body: JSON.stringify({ action: currentMode, target: targetName, reporter: currentUser })
                 });
                 
                 const result = await response.json();
-                
                 if(result.status === 'success') {
                     showNotification();
-                    fetchData(); // Refresh the board instantly
+                    await refreshLeaderboard(); 
+                } else if (result.status === 'error') {
+                    alert(result.message);
                 }
             } catch (error) {
-                alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
+                alert("การเชื่อมต่อล้มเหลว");
             } finally {
-                // Reset button
                 btnElement.innerText = originalText;
                 btnElement.style.pointerEvents = 'auto';
                 btnElement.style.opacity = '1';
             }
         }
 
-        function showNotification() {
-            const notif = document.getElementById('notification');
-            notif.style.display = 'block';
-            setTimeout(() => { notif.style.display = 'none'; }, 3000);
+        async function refreshLeaderboard() {
+             try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                currentLeaderboard = data.leaderboard || [];
+                renderDashboard();
+            } catch (e) {
+                console.error("Refresh failed", e);
+            }
         }
 
-        // Run on load and refresh every 30s
-        fetchData();
-        setInterval(fetchData, 30000);
+        function showNotification() {
+            const notif = document.getElementById('notification');
+            notif.classList.add('show');
+            setTimeout(() => { notif.classList.remove('show'); }, 3000);
+        }
+
+        fetchInitialData();
     </script>
 </body>
 </html>
